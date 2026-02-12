@@ -1,0 +1,22 @@
+name: Lint & Type Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: TypeScript Check
+        run: npx tsc --noEmit
+      - name: ESLint (ratchet — max 92 warnings)
+        run: npx eslint . --ext .ts,.tsx --max-warnings 92
